@@ -314,6 +314,19 @@ many sticks and games yet, so if something's off, please
 Handy axis options for flying: **Throttle → LT / RT Split** (pull back = brake, push
 forward = boost) and **Yaw → LB / RB Split** (twist = rudder on the bumpers).
 
+- **Star Wars Galactic Racer (Pod-Style Controls).** Based on JaffaQuake's
+  *Star Wars Galactic Racer HOSAS/HOTAS Binder*, this mode brings faithful dual-engine
+  podracer control math to Joystick Mapper:
+  - **Dual Engine Thrust:** Map physical stick/throttle levers to **Pod Left Engine** and
+    **Pod Right Engine**.
+  - **Hybrid Preserve-Thrust Mode (default):** Forward differential turns keep maximum forward
+    thrust without slowing down. Pulling one stick back progressively scrubs forward speed. Both
+    backward provides full proportional braking / reverse.
+  - **Differential Steering:** Mixed automatically to Left Stick X ($l - r$). An auxiliary
+    rudder or twist axis can be mapped to **Pod Fine Steering** to blend additional steering.
+  - **Pitch Overrides:** Map buttons to **Pitch Up** and **Pitch Down** for instant full-deflection
+    vertical adjustments (neutralizing if both are held).
+
 ## Good to know
 
 - **The app has to be running while you play.** It translates the stick live; closing it
@@ -464,9 +477,10 @@ src/main/store.js                JSON persistence
 src/main/preload.cjs             The UI's only bridge to the main process
 src/shared/controls.js           Control IDs, Xbox targets, binding rules
 src/shared/profiles.js           Profile library (Default + game profiles, export format)
-src/shared/presets.js            Starting points for new profiles (Ace Combat 8, …)
+src/shared/presets.js            Starting points for new profiles (Ace Combat 8, Galactic Racer…)
 src/shared/games.js              Each game's own gamepad controls (the controls window)
 src/shared/mapper.js             Pure mapping engine (joystick state → XUSB report)
+src/shared/podracer-math.js      Podracer dual-engine mixing & curves (ported from JaffaQuake)
 src/renderer/                    The single screen (layout.js: photo skins, generic.js: universal)
 build/                           Installer resources (icon, NSIS driver step)
 scripts/fetch-vigembus.mjs       Fetches + verifies the bundled driver installer
@@ -490,9 +504,14 @@ approved by the maintainer before it's merged.
 [GPL-3.0](LICENSE). You're free to use, study, share and modify it; if you share a modified
 version, it has to stay open source under the same license.
 
+Pod-Style control mode calculations and response curves are ported from
+[JaffaQuake/Star-Wars-Galactic-Racer-HOSAS-HOTAS-Binder](https://github.com/JaffaQuake/Star-Wars-Galactic-Racer-HOSAS-HOTAS-Binder),
+© JaffaQuake / Mars under GPL-3.0.
+
 The bundled ViGEmBus driver is © Nefarius Software Solutions e.U. under BSD-3-Clause; its
 licence ships with the installer (`resources/vigembus/ViGEmBus-LICENSE.txt`).
 
 The Barlow Semi Condensed font (used where Windows' Bahnschrift isn't available) is © The
 Barlow Project Authors under the SIL Open Font License
 (`src/renderer/assets/fonts/OFL.txt`).
+

@@ -43,4 +43,42 @@ export const GAMES = Object.freeze([
       },
     ],
   },
+  {
+    id: 'galactic-racer',
+    name: 'Star Wars Galactic Racer',
+    short: 'SWGR',
+    source: 'Default gamepad controls & JaffaQuake Pod-Style bridge',
+    sections: [
+      {
+        title: 'Podracer Driving & Thrusters',
+        controls: [
+          { action: 'Thrust / Accelerate', target: 'rt' },
+          { action: 'Brake / Reverse', target: 'lt' },
+          { action: 'Steering', target: 'ls_x' },
+          { action: 'Pitch', target: 'ls_y' },
+        ],
+      },
+      {
+        title: 'Actions & Repairs',
+        controls: [
+          { action: 'Boost / Primary Action', target: 'a' },
+          { action: 'Airbrake / Repair', target: 'b' },
+          { action: 'Look Back / Secondary', target: 'x' },
+          { action: 'Change View / Camera', target: 'y' },
+          { action: 'View / Stats', target: 'view' },
+          { action: 'Menu / Pause', target: 'menu' },
+        ],
+      },
+      {
+        title: 'Directional / D-Pad',
+        controls: [
+          { action: 'Repair Engine Up', target: 'dpad_up' },
+          { action: 'Repair Engine Down', target: 'dpad_down' },
+          { action: 'Repair Left Engine', target: 'dpad_left' },
+          { action: 'Repair Right Engine', target: 'dpad_right' },
+        ],
+      },
+    ],
+  },
 ]);
+

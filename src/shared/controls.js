@@ -139,6 +139,36 @@ export const TARGETS = Object.freeze([
     presses: 'D-pad down or up',
     hint: 'Past its press point: down / up on the D-pad',
   },
+  {
+    id: 'pod_left_engine',
+    name: 'Pod Left Engine',
+    accepts: ['axis'],
+    hint: 'Pod-Style: left engine forward / reverse thrust',
+  },
+  {
+    id: 'pod_right_engine',
+    name: 'Pod Right Engine',
+    accepts: ['axis'],
+    hint: 'Pod-Style: right engine forward / reverse thrust',
+  },
+  {
+    id: 'pod_fine_steer',
+    name: 'Pod Fine Steering',
+    accepts: ['axis'],
+    hint: 'Pod-Style: auxiliary rudder or twist fine steering',
+  },
+  {
+    id: 'pitch_up',
+    name: 'Pitch Up',
+    accepts: ['button'],
+    hint: 'Pod-Style: full deflection pitch up (Left Stick Up)',
+  },
+  {
+    id: 'pitch_down',
+    name: 'Pitch Down',
+    accepts: ['button'],
+    hint: 'Pod-Style: full deflection pitch down (Left Stick Down)',
+  },
 ]);
 
 export const TARGET_BY_ID = Object.freeze(Object.fromEntries(TARGETS.map((t) => [t.id, t])));
@@ -153,11 +183,13 @@ export const TARGET_MENUS = Object.freeze({
     { title: 'Right stick', items: ['rs_up', 'rs_down', 'rs_left', 'rs_right', 'rs_click'] },
     { title: 'Menu', items: ['view', 'menu'] },
     { title: 'Combos', items: ['ls_rs_click', 'lb_rb_both', 'lt_rt_both'] },
+    { title: 'Pod-Style', items: ['pitch_up', 'pitch_down'] },
   ],
   axis: [
     { title: 'Stick axes', items: ['ls_x', 'ls_y', 'rs_x', 'rs_y'] },
     { title: 'Triggers', items: ['lt', 'rt', 'lt_rt'] },
     { title: 'Digital', items: ['lb_rb', 'dpad_x', 'dpad_y'] },
+    { title: 'Pod-Style', items: ['pod_left_engine', 'pod_right_engine', 'pod_fine_steer'] },
   ],
 });
 

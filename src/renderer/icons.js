@@ -151,6 +151,11 @@ const ICONS = {
   menu: () => menuButton('menu'),
   lt_rt: () => split('LT', 'RT'),
   lb_rb: () => split('LB', 'RB'),
+  pod_left_engine: () => trigger('L'),
+  pod_right_engine: () => trigger('R'),
+  pod_fine_steer: () => stick('L', ['left', 'right']),
+  pitch_up: () => stick('L', ['up']),
+  pitch_down: () => stick('L', ['down']),
 };
 
 export function targetIcon(id) {
@@ -194,6 +199,11 @@ export const TILE_LABELS = {
   lb_rb: 'LB / RB',
   dpad_x: 'D-Pad ←→',
   dpad_y: 'D-Pad ↑↓',
+  pod_left_engine: 'Left Eng',
+  pod_right_engine: 'Right Eng',
+  pod_fine_steer: 'Fine Steer',
+  pitch_up: 'Pitch Up',
+  pitch_down: 'Pitch Dn',
 };
 
 export const CHEVRON =

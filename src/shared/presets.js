@@ -113,6 +113,30 @@ export const PRESETS = Object.freeze([
       hat1_left: { target: 'rs_left' },
     },
   },
+  {
+    id: 'galactic-racer-pod',
+    name: 'Star Wars Galactic Racer (Pod-Style)',
+    description: 'Dual-engine podracer controls with preserve-thrust mode',
+    skin: 'extreme3dpro',
+    bindings: {
+      slider: { target: 'pod_left_engine', deadzone: 0.06 },
+      y: { target: 'pod_right_engine', deadzone: 0.06 },
+      rz: { target: 'pod_fine_steer', deadzone: 0.06 },
+      btn1: { target: 'a' },
+      btn2: { target: 'b' },
+      btn3: { target: 'x' },
+      btn4: { target: 'y' },
+      btn5: { target: 'pitch_down' },
+      btn6: { target: 'pitch_up' },
+      btn11: { target: 'view' },
+      btn12: { target: 'menu' },
+      hat1_up: { target: 'dpad_up' },
+      hat1_right: { target: 'dpad_right' },
+      hat1_down: { target: 'dpad_down' },
+      hat1_left: { target: 'dpad_left' },
+    },
+  },
 ]);
 
 export const PRESET_BY_ID = Object.freeze(Object.fromEntries(PRESETS.map((p) => [p.id, p])));
+
