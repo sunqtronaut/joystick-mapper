@@ -7,3 +7,5 @@ dist/
 build/vigembus/*.exe
 # Downloaded at build time by scripts/fetch-hidhide.mjs (checksum-pinned).
 build/hidhide/*.exe
+Star-Wars-Galactic-Racer-HOSAS-HOTAS-Binder/
+

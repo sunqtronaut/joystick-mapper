@@ -1,5 +1,6 @@
 // Pure mapping engine: joystick state + bindings -> Xbox 360 (XUSB) report.
 import { DEFAULT_PRESS_POINT, TARGET_BY_ID, XUSB, controlKind } from './controls.js';
+import { calculateDrive, calculateSteer, tunedCentered } from './podracer-math.js';
 
 // Nothing pressed and no axis reporting (missing controls read as released / at rest).
 export const NEUTRAL_INPUT = Object.freeze({ buttons: Object.freeze({}), axes: Object.freeze({}) });
@@ -63,8 +64,16 @@ function shape(mag, binding) {
   return applyAntiDeadzone(applySensitivity(mag, binding.sensitivity ?? 0), binding.antiDeadzone ?? 0);
 }
 
-export function mapInput(input, bindings) {
+export function mapInput(input, bindings, options = {}) {
   const acc = { buttons: 0, lt: 0, rt: 0, lx: 0, ly: 0, rx: 0, ry: 0 };
+  let podLeft = null;
+  let podRight = null;
+  let podFineSteer = null;
+  let podFineStrength = 100;
+  let manualPitchUp = false;
+  let manualPitchDown = false;
+  let manualLT = false;
+  let manualRT = false;
 
   for (const [controlId, binding] of Object.entries(bindings)) {
     const target = TARGET_BY_ID[binding.target];
@@ -73,9 +82,20 @@ export function mapInput(input, bindings) {
     if (controlKind(controlId) === 'button') {
       if (!input.buttons[controlId]) continue;
       if (target.bit) acc.buttons |= target.bit;
-      else if (target.id === 'lt' || target.id === 'rt') acc[target.id] = 1;
-      else if (target.id === 'lt_rt_both') acc.lt = acc.rt = 1;
-      else if (STICK_PUSH[target.id]) {
+      else if (target.id === 'lt') {
+        acc.lt = 1;
+        manualLT = true;
+      } else if (target.id === 'rt') {
+        acc.rt = 1;
+        manualRT = true;
+      } else if (target.id === 'lt_rt_both') {
+        acc.lt = acc.rt = 1;
+        manualLT = manualRT = true;
+      } else if (target.id === 'pitch_up') {
+        manualPitchUp = true;
+      } else if (target.id === 'pitch_down') {
+        manualPitchDown = true;
+      } else if (STICK_PUSH[target.id]) {
         const [axis, dir] = STICK_PUSH[target.id];
         acc[axis] += dir;
       }
@@ -90,7 +110,14 @@ export function mapInput(input, bindings) {
     if (binding.invert) v = -v;
     const dz = binding.deadzone;
 
-    if (STICK_AXIS[target.id]) {
+    if (target.id === 'pod_left_engine') {
+      podLeft = applyDeadzone(v, dz);
+    } else if (target.id === 'pod_right_engine') {
+      podRight = applyDeadzone(v, dz);
+    } else if (target.id === 'pod_fine_steer') {
+      podFineSteer = applyDeadzone(v, dz);
+      if (typeof binding.steerStrength === 'number') podFineStrength = binding.steerStrength;
+    } else if (STICK_AXIS[target.id]) {
       const d = applyDeadzone(v, dz);
       acc[STICK_AXIS[target.id]] += Math.sign(d) * shape(Math.abs(d), binding);
     } else if (target.id === 'lt' || target.id === 'rt') {
@@ -108,6 +135,37 @@ export function mapInput(input, bindings) {
       else if (d >= point) acc.buttons |= pos;
     }
   }
+
+  if (podLeft !== null || podRight !== null) {
+    const l = podLeft ?? 0;
+    const r = podRight ?? 0;
+    const preserve = options.preserveThrust ?? true;
+    let drive = calculateDrive(l, r, preserve);
+    if (options.thrustProfile) {
+      drive = tunedCentered(drive, options.thrustProfile);
+    }
+    let steer = calculateSteer(l, r, podFineSteer ?? 0, podFineStrength);
+    if (options.steerProfile) {
+      steer = tunedCentered(steer, options.steerProfile);
+    }
+    if (drive >= 0) {
+      acc.rt = Math.max(acc.rt, drive);
+    } else {
+      acc.lt = Math.max(acc.lt, -drive);
+    }
+    acc.lx += steer;
+  }
+
+  if (manualPitchUp && !manualPitchDown) {
+    acc.ly = 1;
+  } else if (manualPitchDown && !manualPitchUp) {
+    acc.ly = -1;
+  } else if (manualPitchUp && manualPitchDown) {
+    acc.ly = 0;
+  }
+
+  if (manualLT) acc.lt = 1;
+  if (manualRT) acc.rt = 1;
 
   // A real D-pad can't press opposite directions together; some games misbehave if it does.
   if (acc.buttons & XUSB.DPAD_UP && acc.buttons & XUSB.DPAD_DOWN) acc.buttons &= ~(XUSB.DPAD_UP | XUSB.DPAD_DOWN);
